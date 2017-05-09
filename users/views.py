@@ -251,3 +251,7 @@ def movie_review(request):
        return Response({"message":"invalid access token"} , status = 400)
     else:
 
+
+#_______________________________________________________________________________________________________________________
+@api_view(["POST"])
+def logout(request):
