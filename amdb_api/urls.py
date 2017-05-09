@@ -28,8 +28,8 @@ urlpatterns = [
     url(r'^api-auth/' , include('rest_framework.urls' , namespace = 'rest_framework')),
     url(r'user/' , get_user),
     url(r'login/' , login_user) ,
-    url(r'movie/create/' , create_movie),
-    url(r'movie/list/' , movie_list),
+    url(r'movie/create/' , create_movie) ,
+    url(r'movie/list/' , movie_list) ,
     url(r'movie/review/' , movie_review)
 
 ]

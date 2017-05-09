@@ -167,7 +167,7 @@ def create_movie(request):
 
             genre = Genre.objects.filter(id=id).first()
             if not genre:
-                return Response({"message": "Invalid genre id! This genre does not exist"}, status=200)
+                return Response({"message": "Invalid genre id! This genre does not exist"}, status = 200)
             else:
                 genres.append(genre)
 
