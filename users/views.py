@@ -23,7 +23,7 @@ from datetime import datetime
 
 from django.http import HttpResponse
 
-
+from django.db.models import Avg
 # Create your views here.
 #_______________________________________________________________________________________________________________________
 @api_view(['POST'])
@@ -224,7 +224,10 @@ def check_token(token):
 def movie_list(request):
     if "q" in request.query_params:
      #   print "query parameter q found in query params"
-        movie = Movie.objects.filter(name = request.query_params['q'])
+        query = request.data('q')
+        movie = Movie.objects.filter(name = query , name__startswith = query ,name__iexact = query , genre = query , genre__startswith = query ,genre__iexact = query )
+      #  movie = Movie.objects.filter(headline__startswith=query)
+      #  movie = Movie.objects.filter(name__iexact=query)
         print movie
         if len(movie) > 0:
             return Response(movie , status=200)
@@ -235,6 +238,7 @@ def movie_list(request):
 
     else:
         movies = Movie.objects.all()
+
 
         return Response(Movielist(instance = movies, many = True).data, status = 200)
 
@@ -266,7 +270,7 @@ def movie_review(request):
         if does_user_already_reviewed is not None:
             return Response({"Error message": "Username already reviewed the movie. please try another"}, status=400)
 
-        new_review = MovieReview(user = user , movie = movie , rating = rating , review = review)
+        new_review = MovieReview(user = user , movie = movie , rating = Avg(rating) , review = review)
         new_review.save()
         return Response({"message": "successfully reviewed"})
 
@@ -277,8 +281,11 @@ def movie_review(request):
 def logout(request):
     current_user = check_token(request)
     if current_user:
-        print current_user.name
-        is_valid = 0
 
+        user = AccessToken(is_valid = 0 )
 
+        user.save()
+
+    else:
+        return Response({"message": "user is not logged in"} , status = 200)
 
