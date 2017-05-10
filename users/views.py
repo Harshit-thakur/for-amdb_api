@@ -13,7 +13,7 @@ from users.models import User
 
 from users.models import AccessToken
 
-from users.models import Movie, Genre, MovieGenre
+from users.models import Movie, Genre, MovieGenre , MovieReview
 
 from users.serializers import UserSerializer , MovieSerializer , Movielist
 
@@ -35,6 +35,7 @@ def create_user(request):
     password = request.data["password"]
     email = request.data["email"]
     short_bio = request.data["short_bio"]
+    contact_no = request.data["contact_no"]
 
     if name is None or len(name) == 0:
         return Response({"Error message": "name field can't be empty"} , status = 400)
@@ -50,7 +51,7 @@ def create_user(request):
         return Response({"Error message": "Username already Exist. please try another"} , status = 400)
 
 
-    new_user = User(name = name , username = username , password = make_password(password) ,email = email , short_bio = short_bio)
+    new_user = User(name = name , username = username , password = make_password(password) ,email = email , short_bio = short_bio , contact_no = contact_no)
 
     new_user.save()
 
@@ -111,7 +112,7 @@ def login_user(request):
 
 
     if not username or not password:
-        return Response({"message": "Either0 username or password is invalid"} , status = 200)
+        return Response({"message": "Either username or password is invalid"} , status = 200)
 
 
 
@@ -250,8 +251,32 @@ def movie_review(request):
         #checking acccesstoken validation
        return Response({"message":"invalid access token"} , status = 400)
     else:
+        current_user = check_token(request)
+        user = current_user
+        movie = request.data["movie"]
+        rating = request.data["rating"]
+        review = request.data["review"]
+
+        if rating > 5 or rating <0:
+            return Response({"message": "Rating can't be greater than 5" }, status = 200)
+
+        does_user_already_reviewed = MovieReview.objects.filter(user=user).first()
+       #print does_user_already_reviewed
+
+        if does_user_already_reviewed is not None:
+            return Response({"Error message": "Username already reviewed the movie. please try another"}, status=400)
+
+        new_review = MovieReview(user = user , movie = movie , rating = rating , review = review)
+        new_review.save()
+        return Response({"message": "successfully reviewed"})
+
 
 
 #_______________________________________________________________________________________________________________________
 @api_view(["POST"])
 def logout(request):
+    current_user = check_token(request)
+    if current_user:
+        print current_user.name
+
+
