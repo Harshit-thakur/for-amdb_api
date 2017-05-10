@@ -272,7 +272,7 @@ def movie_review(request):
 
         new_review = MovieReview(user = user , movie = movie , rating = Avg(rating) , review = review)
         new_review.save()
-        return Response({"message": "successfully reviewed"})
+        return Response({"message": "successfully reviewed"} , status = 200)
 
 
 
