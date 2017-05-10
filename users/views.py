@@ -278,5 +278,7 @@ def logout(request):
     current_user = check_token(request)
     if current_user:
         print current_user.name
+        is_valid = 0
+
 
 

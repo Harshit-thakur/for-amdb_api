@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.conf.urls import url
 from django.contrib import admin
-from users.views import create_user , get_user , login_user , create_movie , movie_list , movie_review , logout
+from users.views import create_user , get_user , login_user , create_movie , movie_list , movie_review #, logout
 from django.conf.urls import include
 
 
@@ -30,8 +30,8 @@ urlpatterns = [
     url(r'login/' , login_user) ,
     url(r'movie/create/' , create_movie) ,
     url(r'movie/list/' , movie_list) ,
-    url(r'movie/review/' , movie_review),
-    url(r'logout/' , logout)
+    url(r'movie/review/' , movie_review)
+#    url(r'logout/' , logout)
 
 
 ]
